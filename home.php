@@ -1,4 +1,3 @@
-
 <?php
 	
 include("header.php");
@@ -13,10 +12,11 @@ include("topnav.php");
     </title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,">
-<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
 <link rel="stylesheet" href="hover/css/hover.css">
 <link rel="stylesheet" href="hover/css/animation.css">
-
+<link href="assets/css/toolkit.css" rel="stylesheet">
+    <link href="assets/css/application.css" rel="stylesheet">
 
 <div class="container p-t-md">
   <div class="row">
@@ -123,7 +123,7 @@ include("topnav.php");
           <h5 class="m-t-0">About <small>· <a href="#">Edit</a></small></h5>
           <ul class="list-unstyled list-spaced">
             <li><span class="text-muted icon icon-calendar m-r"></span>Went to <a href="#"><?php echo $result['travel'];?></a>
-            <li><span class="text-muted icon icon-briefcase m-r"></span>Worked at <a href="#"><?php echo $result['work'];?></a>
+            <li><span class="text-muted icon icon-github m-r"></span>Worked at <a href="#"><?php echo $result['work'];?></a>
             <li><span class="text-muted icon icon-home m-r"></span>Lives in <a href="#"><?php echo $result['address'];?></a>
             <li><span class="text-muted icon icon-location-pin m-r"></span>From <a href="#"><?php echo $result['currentadd'];?></a>
           </ul>
@@ -241,19 +241,22 @@ include("topnav.php");
               <div id ="post-container"  >
 
                 <?php
+                
+
 
 function timeAgo($time_ago){
+date_default_timezone_set("Asia/Manila");
+$cur_time = date("Y-m-d  H:i:s");
 
-$cur_time   = date('Y-m-d H:i:s');
-$curr_time = strtotime($cur_time) - 3600;
-//echo $curr_time;
+$curr_time = strtotime($cur_time) - 46800;
+//echo $cur_time;
 $time_elapsed   = $curr_time - $time_ago;
 $seconds  = $time_elapsed;
 $minutes  = floor($time_elapsed / 60 );
 $hours    = floor($time_elapsed / 3600);
 $days     = floor($time_elapsed / 86400 );
 $weeks    = floor($time_elapsed / 604800);
-$months   = floor($time_elapsed /  2600640 );
+$months   = floor($time_elapsed / 2600640 );
 $years    = floor($time_elapsed / 31207680 );
 // Seconds
 if($seconds <= 60){ 
@@ -343,13 +346,14 @@ else{
                         $profilepic = $result['profileP'];
                         $postid = $result['postid'];
                         $optionc = $result['userid'];
-                        
+                        $dbtime = $result['dbtime'];
+                        $lang = $result['language'];
 
                         //echo $sql;
                       
                         echo '<li class="media list-group-item p-a">
                               <a class="media-left" href="search.php?search='.$name.'">
-                                <img class="media-object img-circle" src="img/'.$profilepic.'">';
+                                <img class="media-object img-circle" src="img/'.$profilepic.'"> ';
                                   //print_r($result);
                                 
                        echo'       </a>
@@ -363,13 +367,15 @@ else{
                         //$account = $conn->prepare("SELECT * FROM tblpost WHERE userid = '$uid' AND postid = '$postid'");
                         //$account->execute();
                         //$results = $account->fetch(PDO::FETCH_ASSOC);
-                        $oldtime = date("Y-m-d H:i:s", strtotime($result['currentDate']));
-                        //$mydate=date('F j, Y g:i A');
+                        date_default_timezone_set("Asia/Manila");
+                        $oldtime = date("Y-m-d H:i:s", strtotime($dbtime));
+                        //$mydate=date('F d, Y h:mA');
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
                         timeAgo($time_ago);
 
-                       // echo $time_ago;
+                       //echo $time_ago;
+                       //echo $postid;
                         //echo $oldtime;
                        // echo $mydate;
                         //if($oldtime == $mydate){
@@ -517,17 +523,14 @@ else{
                                  
                                   
                                   if($checkSaved == 0){
-                                  echo'<div class = "modal-body">
-                                  <center>   
+                                  echo'<div class = "modal-body" style="font-family: Impact;">
+                                 <center>   
                                       <form action="assets/savedpost.php" method="POST">
                                         <input type="hidden" name="pid" id="pid" value="'.$postid.'">
                                         <input type="hidden" name="frienduserid" id="frienduserid" value="'.$optionc.'">
                                         <input type="hidden" name="mainuserid" id="mainuserid" value="'.$uid.'">
-                                        <input type="hidden" name="pmessage" id="pmessage" value="'.$mpost.'">
-                                        
-                                        <span class="glyphicon glyphicon-bookmark btn btn-primary-outline btn-sm" id="insert" type="submit"> SAVE</span>
-                                      
-
+                                        <input type="hidden" name="pmessage" id="pmessage" value="'.$mpost.'">                        
+                                        <button class="glyphicon glyphicon-bookmark btn btn-primary-outline btn-sm" id="insert" type="submit"> SAVE</button>
                                       </form>
                                   </center>   
                                       </div>
@@ -543,7 +546,7 @@ else{
                                         <input type="hidden" name="pmessage" id="pmessage" value="'.$mpost.'">
                                          <button class="glyphicon glyphicon-bookmark btn btn-default-outline btn-sm" id="insert" type="submit"> UNSAVE</button>
                                       </form>
-                                      </center>   
+                                      </center>     
                                       </div>';
                                     }
                                 if($optionc == $uid){
@@ -552,16 +555,16 @@ else{
                                       <center>   
                                         <form action="assets/delete.php" method="POST">
                                           <input type="hidden" name="pid" id="pid" value="'.$postid.'">
-                                          <button class="glyphicon glyphicon-remove btn btn-danger-outline btn-sm" id="insert" type="submit"> DELETE</button>
+                                          <button class="glyphicon glyphicon-trash btn btn-danger-outline btn-sm" id="insert" type="submit"> DELETE</button>
                                         </form>
-                                      </center>   
+                                      </center> 
                                       </div>';
                                   }else{
                                    echo'  <div class = "modal-body">
                                       <center>   
                                         <form action="#" method="POST">
                                           <input type="hidden" name="pid" id="pid" value="'.$postid.'">
-                                          <button class="glyphicon glyphicon-question-sign btn btn-danger-outline btn-sm" id="insert" type="submit"> REPORT</button>
+                                          <span class="glyphicon glyphicon-question-sign btn btn-danger-outline btn-sm" id="insert" type="submit"> REPORT</span>
                                         </form>
                                       </center>   
                                       </div>';
@@ -947,7 +950,7 @@ else{
                   $imahes = $result['profileP'];
                   $friendsname = $result['firstname']." ".$result['lastname'];
                   $friendemail = $result['firstname'].$result['lastname'];
-
+                  $searching = $result['firstname'];
                   echo '<ul class="media-list media-list-stream">';
                   echo    '<li class="media m-b">';
                   echo '';

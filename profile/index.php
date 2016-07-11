@@ -476,30 +476,37 @@ $uid = $_SESSION['userid'];
 
   <div class="container">
     <div class="container-inner" >
-      <form action="../assets/saveimagep.php" enctype="multipart/form-data" method="post">
-      <div class="dropdown">
-      <img class="img-circle media-object hrv-float-shadow dropdown-toggle "  data-toggle="dropdown" aria-hidden="true" 
+
+      <img class="img-circle media-object hrv-float-shadow dropdown-toggle "   data-toggle="modal" data-target="#mymodal2" 
           id = "updatephotos" src="../img/<?php echo $result['profileP'];?>">
-            <ul class="dropdown-menu " role="menu" aria-labelledby="updatephotos" style=";width:200px;position:absolute; z-index:13; margin-left:50px;" >
-              <li role="presentation"><a role="menuitem" >
-                <input name="uploadedimage" type="file">
-              </a>
-              </li>
-              <li role="presentation"><a role="menuitem" >  
-                <input name="Upload Now" type="submit" value="Upload Image">
-                          </a>
-              </li>
-            </ul>
 
-
-            <style>
-                 #updatephotos:hover{
-                  cursor:pointer;
-
-                  }
-          </style>
-        </div>
-      </form>
+        	<div class="modal fade" id="mymodal2" tabindex="-1" role="dialog" aria-labelledby="#mymodal" aria-hidden="true" >
+        	     <div class="modal-dialog modal-sm">
+          		<div class="modal-content">
+              			<div class="modal-header" >
+                   			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  			 <h4 class="modal-title">Update Profile Photo</h4>
+              			</div>         
+                        <div class="modal-body" >               
+               			<form action="../assets/saveimagep.php" enctype="multipart/form-data" method="post"> 
+               			 <ul class="list-group media-list media-list-stream">    
+              				<li class="media list-group-item p-a">
+              				                <input name="uploadedimage" type= "file" >
+              				</li>
+              				<li class="media list-group-item p-a">  
+                				<input name="Upload Now" type="submit" value="Upload Image" class ="btn btn-primary-outline btn-sm">
+              				</li>
+              			</ul>
+            				<style>
+                 				#updatephotos1:hover{
+                  					cursor:pointer;
+                 				 }
+          				</style>
+      				</form>
+       			</div>                          
+              		</div>
+         	     </div>
+        	</div>
 
 
       <h3 class="profile-header-user"><?php echo $result['firstname']." ".$result['lastname'];?></h3>
@@ -507,38 +514,45 @@ $uid = $_SESSION['userid'];
         <?php echo $result['motto'];?>
       </p>
     </div>
-     <button class="btn btn-primary-outline btn-sm"  data-toggle="modal" data-target="#mymodal">
-        <span class="icon icon-cog"></span>Update Profile</button><br><br>
+    <div class="container-inner" >  
+     <button class="btn btn-primary-outline btn-sm"  data-toggle="modal" data-target="#mymodal" style=" margin-left:-150px;">
+        <span class="icon icon-cog"></span>Update Profile</button>
 
          
-                 
-       <div class="container-inner" >     
-    <form action="../assets/saveimagec.php" enctype="multipart/form-data" method="post">
-        <div class="dropdown">
-         <button class="btn btn-primary-outline btn-sm"  data-toggle="dropdown" aria-hidden="true" 
-            id = "updatephotos1" >
-                <span class="icon icon-cog"></span>Update Cover Photo</button> <br>
-            <ul class="dropdown-menu " role="menu" aria-labelledby="updatephotos1" style=";width:200px;position:absolute; z-index:13; margin-left:50px;"   >
-              <li role="presentation"><a role="menuitem" >
-                <input name="uploadedimage" type="file">
-              </a>
-              </li>
-              <li role="presentation"><a role="menuitem" >  
-                <input name="Upload Now" type="submit" value="Upload Image">
-                          </a>
-              </li>
-            </ul>
 
 
-            <style>
-                 #updatephotos1:hover{
-
-                  cursor:pointer;
-
-                  }
-          </style>
-        </div>
-      </form>
+         <button class="btn btn-primary-outline btn-sm"  data-toggle="modal" data-target="#mymodal1" 
+            id = "updatephotos1" style="margin-top:0px; margin-left:20px; position:absolute">
+            <span class="icon icon-cog"></span>Update Cover Photo</button> <br>
+            
+        	<div class="modal fade" id="mymodal1" tabindex="-1" role="dialog" aria-labelledby="#mymodal" aria-hidden="true" >
+        	     <div class="modal-dialog modal-sm">
+          		<div class="modal-content">
+              			<div class="modal-header" >
+                   			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  			 <h4 class="modal-title">Update Cover Photo</h4>
+              			</div>         
+                        <div class="modal-body" >               
+               			<form action="../assets/saveimagec.php" enctype="multipart/form-data" method="post"> 
+               			 <ul class="list-group media-list media-list-stream">    
+              				<li class="media list-group-item p-a">
+              				                <input name="uploadedimage" type= "file" >
+              				</li>
+              				<li class="media list-group-item p-a">  
+                				<input name="Upload Now" type="submit" value="Upload Image" class ="btn btn-primary-outline btn-sm">
+              				</li>
+              			</ul>
+            				<style>
+                 				#updatephotos1:hover{
+                  					cursor:pointer;
+                 				 }
+          				</style>
+      				</form>
+       			</div>                          
+              		</div>
+         	     </div>
+        	</div>
+  
     </div>
 
 
@@ -717,13 +731,16 @@ $uid = $_SESSION['userid'];
 
         </li>
 
-                <?php
+                            <?php
+                
+
 
 function timeAgo($time_ago){
+date_default_timezone_set("Asia/Manila");
+$cur_time = date("Y-m-d  H:i:s");
 
-$cur_time   = date('Y-m-d H:i:s');
-$curr_time = strtotime($cur_time) + 3600;
-//echo $curr_time;
+$curr_time = strtotime($cur_time) - 46800;
+//echo $cur_time;
 $time_elapsed   = $curr_time - $time_ago;
 $seconds  = $time_elapsed;
 $minutes  = floor($time_elapsed / 60 );
@@ -786,6 +803,7 @@ else{
   }
 }
 }?>
+
       
           
    
@@ -825,7 +843,7 @@ else{
                         echo  '<div class="media-body-text">';
                         echo    '<div class="media-heading">';
                         echo       '<small class="pull-right text-muted">';
-                        $oldtime = date("Y-m-d H:i:s", strtotime($result['currentDate']));
+                        $oldtime = date("Y-m-d H:i:s", strtotime($result['dbtime']));
                         //$mydate=date('F j, Y g:i A');
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
