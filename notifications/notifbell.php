@@ -177,35 +177,11 @@ $dateup = $upd->fetch(PDO::FETCH_ASSOC);
           </li>
         </ul>
 
-          <form class="navbar-form navbar-right app-search" role="search" action="../search.php" method="POST">
+        <form class="navbar-form navbar-right app-search" role="search" action="../assets/search.php" method="POST">
           <div class="form-group">
-
-          <input type="text" list = "browsers"class="form-control" data-action="grow" id = "search" name = "search" placeholder="Search">
-                    <datalist id="browsers">
-                <?php
-                  $conn = dbConnect();
-                  $account = $conn->prepare("SELECT * FROM tbluser limit 5");
-                  $account->execute();
-                  while($result = $account->fetch(PDO::FETCH_ASSOC)){
-                    $name = $result['firstname'].' '.$result['lastname'];
-                    $prof = $result['profileP'];
-                    $useid = $result['userid'];
-
-                  
-                    echo '<option value="'.$name.'"></option>';
-              
-                    
-                  } 
-                    echo '</datalist>';
-
-                ?>    
-        
-                    
-                
-
+            <input type="text" class="form-control" data-action="grow" placeholder="Search" name = "search">
           </div>
         </form>
-
 
         <ul class="nav navbar-nav hidden-sm hidden-md hidden-lg">
           <li><a href="../home.php">Home</a></li>
@@ -553,20 +529,23 @@ $dateup = $upd->fetch(PDO::FETCH_ASSOC);
           <h3 class="m-a-0">Notifications</h3>
         </li>
               <!--liked and commented notification-->
-                      <?php
+                  <?php
+                
+
 
 function timeAgo($time_ago){
+date_default_timezone_set("Asia/Manila");
+$cur_time = date("Y-m-d  H:i:s ");
 
-$cur_time   = date('Y-m-d H:i:s');
-$curr_time = strtotime($cur_time) - 25200;
-//echo $curr_time;
+$curr_time = strtotime($cur_time) - 43200;
+//echo $cur_time;
 $time_elapsed   = $curr_time - $time_ago;
 $seconds  = $time_elapsed;
 $minutes  = floor($time_elapsed / 60 );
 $hours    = floor($time_elapsed / 3600);
 $days     = floor($time_elapsed / 86400 );
 $weeks    = floor($time_elapsed / 604800);
-$months   = floor($time_elapsed /  2600640 );
+$months   = floor($time_elapsed / 2600640 );
 $years    = floor($time_elapsed / 31207680 );
 // Seconds
 if($seconds <= 60){ 
@@ -621,7 +600,8 @@ else{
     echo "$years years ago";
   }
 }
-}?>                
+}?>
+                   
                     <?php   
                       $conn = dbConnect();                    
                       $account = $conn->prepare("SELECT * 
@@ -656,13 +636,14 @@ else{
                                         FROM tbllikes where postid = '$piid'");
                                         $time->execute();
                                         $resulta = $time->fetch(PDO::FETCH_ASSOC);
-                                        $oldtime = date("Y-m-d H:i:s", strtotime($resulta['currentDate']));
+                                        $oldtime = date("Y-m-d H:i:s", strtotime($resulta['dbtime']));
                         //$mydate=date('F j, Y g:i A');
                         //echo $oldtime;
                         //echo 'asdasd';
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
                         timeAgo($time_ago);
+                        //echo $oldtime;
                           echo     '</small>
                                         <div class="media-heading">
                                           <div class="media-left"> ';
@@ -679,7 +660,6 @@ else{
                       }          
                           
                     ?>
-                  
                       
         
 <!--

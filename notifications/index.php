@@ -150,32 +150,9 @@ $uid = $_SESSION['userid'];
           </li>
         </ul>
 
-          <form class="navbar-form navbar-right app-search" role="search" action="../search.php" method="POST">
+        <form class="navbar-form navbar-right app-search" role="search" action="../assets/search.php" method="POST">
           <div class="form-group">
-
-          <input type="text" list = "browsers"class="form-control" data-action="grow" id = "search" name = "search" placeholder="Search">
-                    <datalist id="browsers">
-                <?php
-                  $conn = dbConnect();
-                  $account = $conn->prepare("SELECT * FROM tbluser limit 5");
-                  $account->execute();
-                  while($result = $account->fetch(PDO::FETCH_ASSOC)){
-                    $name = $result['firstname'].' '.$result['lastname'];
-                    $prof = $result['profileP'];
-                    $useid = $result['userid'];
-
-                  
-                    echo '<option value="'.$name.'"></option>';
-              
-                    
-                  } 
-                    echo '</datalist>';
-
-                ?>    
-        
-                    
-                
-
+            <input type="text" class="form-control" data-action="grow" placeholder="Search" name = "search">
           </div>
         </form>
 
@@ -524,20 +501,23 @@ $uid = $_SESSION['userid'];
         <li class="list-group-item p-a">
           <h3 class="m-a-0">Notifications</h3>
         </li>
-                     <?php
+   <?php
+                
+
 
 function timeAgo($time_ago){
+date_default_timezone_set("Asia/Manila");
+$cur_time = date("Y-m-d  H:i:s");
 
-$cur_time   = date('Y-m-d H:i:s');
-$curr_time = strtotime($cur_time) - 25200;
-//echo $curr_time;
+$curr_time = strtotime($cur_time) - 3600;
+//echo $cur_time;
 $time_elapsed   = $curr_time - $time_ago;
 $seconds  = $time_elapsed;
 $minutes  = floor($time_elapsed / 60 );
 $hours    = floor($time_elapsed / 3600);
 $days     = floor($time_elapsed / 86400 );
 $weeks    = floor($time_elapsed / 604800);
-$months   = floor($time_elapsed /  2600640 );
+$months   = floor($time_elapsed / 2600640 );
 $years    = floor($time_elapsed / 31207680 );
 // Seconds
 if($seconds <= 60){ 
@@ -596,7 +576,7 @@ else{
         <?php   
                       $conn = dbConnect();
                      
-                      $account = $conn->prepare("SELECT tblfriendlist.mainuserid, frienduserid,userid,firstname,lastname,email,profileP 
+                      $account = $conn->prepare("SELECT tblfriendlist.mainuserid, frienduserid, currentDate, userid,firstname,lastname,email,profileP 
                         FROM tblfriendlist,tbluser WHERE tblfriendlist.mainuserid = tbluser.userid 
                         AND tblfriendlist.frienduserid = '$uid' AND status = 0 order by tblfriendlist.friendid DESC");
                       $account->execute();
@@ -606,17 +586,17 @@ else{
                         $request = $result['firstname']." ".$result['lastname'];
                         $follower = $result['mainuserid'];
                         $following = $result['frienduserid'];
+                        $dbtime = $result['currentDate'];
                         echo '<li class="list-group-item media p-a">
                                   <div class="media-body">
                                      <small class="pull-right text-muted">';
-                        $oldtime = date("Y-m-d H:i:s", strtotime($result['currentDate']));
-                        //$mydate=date('F j, Y g:i A');
-                        //echo $oldtime;
-                        //echo 'asdasd';
+                        date_default_timezone_set("Asia/Manila");
+                        $oldtime = date("Y-m-d H:i:s", strtotime($dbtime));
+                        //$mydate=date('F d, Y h:mA');
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
                         timeAgo($time_ago);
-
+                        echo $oldtime;
                         echo  '</small>
                                       <div class="media-heading">
                                         <img class = "img-circle media-object" src="../img/'.$imahe.'">
@@ -652,13 +632,13 @@ else{
                         $request = $result['firstname']." ".$result['lastname'];
                         $follower = $result['mainuserid'];
                         $following = $result['frienduserid'];
+                        $dbtime = $result['currentDate'];
                         echo '<li class="list-group-item media p-a">
                                   <div class="media-body">
                                      <small class="pull-right text-muted">';
-                        $oldtime = date("Y-m-d H:i:s", strtotime($result['currentDate']));
-                        //$mydate=date('F j, Y g:i A');
-                        //echo $oldtime;
-                        //echo 'asdasd';
+
+                        $oldtime = date("Y-m-d g:i:s", strtotime($dbtime));
+                        //$mydate=date('F d, Y h:mA');
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
                         timeAgo($time_ago);
@@ -891,7 +871,7 @@ else{
                       echo        '<img class="media-object img-circle" src="../img/'.$imahes.'">';
                       echo      '</a>';
                       echo    '<div class="media-body">';
-                      echo      '<a href="../search.php?search='.$friendsname.'">';
+                      echo      '<a class="media-left" href="../search.php?search='.$friendsname.'">';
                       echo      '<strong>'.$friendsname.'</strong></a> @"'.$friendemail.'"';
                       //echo '<input type="hidden" name="mainuid" id="mainuid" value="<?php echo $mainuserid;?">';
                       echo '<input type="hidden" name="frienduid" id="frienduid" value="'.$frienduserid.'">';
