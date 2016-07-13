@@ -171,11 +171,17 @@ include("topnav.php");
 
             <input type="text" placeholder="What's Up?" id = "comment" class="form-control" name="comment" placeholder="Message">
             <input type="hidden" name="uid" id="uid" value="<?php echo $_SESSION['userid']; ?>">
+            
+
             <div class="input-group-btn">
               <button type="button" name = "submit"  class="btn btn-default" id ="show">
                 <span><img src="img/send.png" width="20px" height="20px"></span>
               </button>
+                <button type="button" name = "submit"  class="btn btn-default" data-toggle="modal" data-target="#mymodalcam">
+                <span><img src="img/camera1.png" width="20px" height="20px"></span>
+              </button>
             </div>
+
 
               <script type="text/javascript">
               jQuery(document).ready(function($) {
@@ -231,25 +237,118 @@ include("topnav.php");
 
 
             </script>
+                <style type="text/css">
+                    article
+                    {
+                        width: 80%;
+                        margin:auto;
+                        margin-top:10px;
 
+                    }
+                    .thumbnail{
+                        height: 100px;
+                        width:100px;
+                        margin: 10px;  
+                        position:center;
+                
+
+                    }
+          </style>
+           <script type="text/javascript">
+      window.onload = function(){
+        
+    //Check File API support
+    if(window.File && window.FileList && window.FileReader)
+    {
+        var filesInput = document.getElementById("files");
+        
+        filesInput.addEventListener("change", function(event){
+            
+            var files = event.target.files; //FileList object
+            var output = document.getElementById("result");
+            
+            for(var i = 0; i< files.length; i++)
+            {
+                var file = files[i];
+                
+                //Only pics
+                if(!file.type.match('image'))
+                  continue;
+                
+                var picReader = new FileReader();
+                
+                picReader.addEventListener("load",function(event){
+                    
+                    var picFile = event.target;
+                    
+                    var div = document.createElement("div");
+                    
+                    div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" +
+                            "title='" + picFile.name + "'/> <a href='#' class='remove_pict'>X</a>";
+                    
+                    output.insertBefore(div,null);   
+                    div.children[1].addEventListener("click", function(event){
+                       div.parentNode.removeChild(div);
+                    });         
+                
+                });
+                
+                 //Read the image
+                picReader.readAsDataURL(file);
+            }                               
+           
+        });
+    }
+    else
+    {
+        console.log("Your browser does not support File API");
+    }
+}
+    
+    </script>
           </div>
         </li>
 
            
-          
-              
-              <div id ="post-container"  >
+      <div class="modal fade" id="mymodalcam" tabindex="-1" role="dialog" aria-labelledby="#mymodal" aria-hidden="true" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header" >
+                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                   <h4 class="modal-title">Upload a Photo</h4>
+                </div>        
+                  <div class="modal-body" >
+                    <form action="assets/insertPic.php" enctype="multipart/form-data" method="post">
+                       <li class="media list-group-item p-a">
+                       <!--<input name="uploadedimage" type="file">-->
+                      
+                        <article>
+                            <label for="files">Select multiple files: </label>
+                            <input id="files" name="uploadedimage" type="file"/>
+                            <output id="result"/>
+                        </article>
+               
+                </li>
+                         <li class="media list-group-item p-a"> 
+                        <input name="Upload Now" type="submit" value="Upload Image">
+                      </li>
+                    </form>
+                  </div>
+          </div>
+        </div>
+      </div>
+
+         
 
                 <?php
                 
 
 
 function timeAgo($time_ago){
-date_default_timezone_set("Asia/Manila");
-$cur_time = date("Y-m-d  H:i:s");
 
+$cur_time = date("Y-m-d  H:i:s");
 $curr_time = strtotime($cur_time) - 46800;
-//echo $cur_time;
+echo $cur_time;
 $time_elapsed   = $curr_time - $time_ago;
 $seconds  = $time_elapsed;
 $minutes  = floor($time_elapsed / 60 );
@@ -346,9 +445,9 @@ else{
                         $profilepic = $result['profileP'];
                         $postid = $result['postid'];
                         $optionc = $result['userid'];
-                        $dbtime = $result['dbtime'];
+                       $dbtime = $result['dbtime'];
                         $lang = $result['language'];
-
+                        $postP = $result['postPic'];
                         //echo $sql;
                       
                         echo '<li class="media list-group-item p-a">
@@ -367,16 +466,15 @@ else{
                         //$account = $conn->prepare("SELECT * FROM tblpost WHERE userid = '$uid' AND postid = '$postid'");
                         //$account->execute();
                         //$results = $account->fetch(PDO::FETCH_ASSOC);
-                        date_default_timezone_set("Asia/Manila");
-                        $oldtime = date("Y-m-d H:i:s", strtotime($dbtime));
+                                                $oldtime = date("Y-m-d H:i:s", strtotime($dbtime));
                         //$mydate=date('F d, Y h:mA');
                         $curenttime= $oldtime;
                         $time_ago =strtotime($curenttime);
                         timeAgo($time_ago);
-
+                        //echo $postid;
                        //echo $time_ago;
                        //echo $postid;
-                        //echo $oldtime;
+                       echo $oldtime;
                        // echo $mydate;
                         //if($oldtime == $mydate){
                         //        echo "just now";
@@ -408,9 +506,11 @@ else{
                                                 // if no urls in the text just return the text
                                              echo $mpost;
                                               }
+                       
                         echo        '</div></p>';//end of messagecontent
                         echo   '</div>';//end of media-body-text
                         // translate
+
                         echo '<div class="media-body-inline-grid">';
                         echo '     &nbsp<div class ="hvr-float-shadow pull-right text-muted" data-toggle="tooltip"  title="Translate" 
                                           id="translate-'.$postid.'" style="text-align:right;  width:30px; height:30px;"onclick="trans('.$postid.')">
@@ -428,6 +528,15 @@ else{
                         echo          '</div>';
                           //start of btn like etc....
                         echo'</div>';//
+                        //print_r($result['postPic']);
+                          if($result['postPic']!="NONE"){       
+                          echo '<div class="media-body-inline-grid" data-grid="images">';              
+                        echo  '<img style="display: inline-block; width: 467px; height: 452px; margin-bottom: 10px; margin-right: 0px; vertical-align: bottom;" data-width="640" data-height="640" data-action="zoom" src="img/'.$postP.'"> ';
+                        echo'</div>';
+                        }else{
+
+                        }
+                        
                         echo '<div class="media-body-actions">';
                         echo '<div class="row">';
                         echo '  <div id = "like" style="display: inline-block;   vertical-align: bottom;" class="col-md-3">';
